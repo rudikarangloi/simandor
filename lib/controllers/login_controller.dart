@@ -45,12 +45,12 @@ class LoginController extends GetxController {
       // if (data.toString() == "Success") {
       if (data["message"] == "Success") {
         var userIid = data["value"]["User_ID"];
-        var kode = data["value"]["User_ID"];
-        var fullName = data["value"]["User_ID"];
-        var shortName = data["value"]["User_ID"];
-        var level = data["value"]["User_ID"];
-        var admin = data["value"]["User_ID"];
-        var active = data["value"]["User_ID"];
+        var kode = data["value"]["Kode"];
+        var fullName = data["value"]["Full_Name"];
+        var shortName = data["value"]["Short_Name"];
+        var level = data["value"]["Level"];
+        var admin = data["value"]["Admin"];
+        var active = data["value"]["Active"];
 
         addStringToSF(usernameC.text, "OK", userIid, kode, fullName, shortName,
             level, admin, active);
@@ -89,11 +89,11 @@ class LoginController extends GetxController {
     prefs.setString("userName", userName);
     prefs.setString("isLogin", isLogin);
     prefs.setString("userIid", userIid);
-    prefs.setString("kode", kode);
+    prefs.setString("kodeUpb", kode);
     prefs.setString("fullName", fullName);
     prefs.setString("shortName", shortName);
-    prefs.setString("isLogin", level);
-    prefs.setString("isLogin", admin);
-    prefs.setString("isLogin", active);
+    prefs.setString("level", level);
+    prefs.setString("admin", admin);
+    prefs.setString("active", active);
   }
 }

@@ -45,10 +45,11 @@ class _FormkibliteState extends State<Formkiblite> {
   String kdUpb;
   String idt;
   String kode_bar = '0002';
-
   String userName = '';
+  String kodeUpb = "";
+  String level = "";
+  String admin = "";
 
-  // String base_url = "http://192.168.1.9/api";
   String selectedRincianObjek = '';
   List<String> dataRincianObjek = [];
 
@@ -84,8 +85,8 @@ class _FormkibliteState extends State<Formkiblite> {
   }
 
   Future getUnit(tableName, kode) async {
-    var response = await http.get(
-        Uri.parse("$BASE_URL/getUnit.php?tableName=$tableName&kode=$kode"));
+    var response = await http.get(Uri.parse(
+        "$BASE_URL/getUnit.php?tableName=$tableName&kode=$kode&kodeUpb=$kodeUpb&level=$level&admin=$admin"));
     if (response.statusCode != 200) {
       return [];
     }
@@ -288,6 +289,19 @@ class _FormkibliteState extends State<Formkiblite> {
     return userName;
   }
 
+  void getStringSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    kodeUpb = prefs.get('kodeUpb');
+    level = prefs.get('level');
+    admin = prefs.get('admin');
+  }
+
+  @override
+  void initState() {
+    getStringSF();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -307,6 +321,9 @@ class _FormkibliteState extends State<Formkiblite> {
               print(widget.gCode);
               print(kdSubUnit);
               print(kdKib);
+              print('==========');
+              print(kdUpb);
+              print(level);
               print('==========');
             },
             dropdownBuilder: (context, selectedItem) =>
