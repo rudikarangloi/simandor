@@ -34,8 +34,11 @@ class Login extends StatelessWidget {
         encoding: Encoding.getByName("utf-8"));
 
     var data = json.decode(response.body);
+
     if (data.toString() == "Success") {
-      addStringToSF(user.text, "OK");
+      // if (data["message"] == "Success") {
+      //print(data["value"]);
+      //addStringToSF(user.text, "OK");
 
       Fluttertoast.showToast(
         msg: 'Login Successful',
@@ -88,7 +91,7 @@ class Login extends StatelessWidget {
           ),
         ),
         const Text(
-          "SIMANDOR",
+          "SIMANDOR ONLINE",
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,

@@ -41,17 +41,26 @@ class LoginController extends GetxController {
 
       var data = json.decode(response.body);
       isLoading.value = false;
-      if (data.toString() == "Success") {
-        addStringToSF(usernameC.text, "OK");
 
-        Fluttertoast.showToast(
-          msg: 'Login Successful',
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_SHORT,
-        );
+      // if (data.toString() == "Success") {
+      if (data["message"] == "Success") {
+        var userIid = data["value"]["User_ID"];
+        var kode = data["value"]["User_ID"];
+        var fullName = data["value"]["User_ID"];
+        var shortName = data["value"]["User_ID"];
+        var level = data["value"]["User_ID"];
+        var admin = data["value"]["User_ID"];
+        var active = data["value"]["User_ID"];
 
-        Get.offAll(insertTableFromQr());
+        addStringToSF(usernameC.text, "OK", userIid, kode, fullName, shortName,
+            level, admin, active);
+
+        if (data["value"]["Active"] == 'N') {
+          Get.defaultDialog(
+              title: "Pemberitahuan", middleText: "Username tidak aktif");
+        } else {
+          Get.offAll(insertTableFromQr());
+        }
       } else {
         Get.defaultDialog(
             title: "Terjadi kesalahan",
@@ -66,9 +75,25 @@ class LoginController extends GetxController {
     }
   }
 
-  void addStringToSF(String userName, String isLogin) async {
+  void addStringToSF(
+      String userName,
+      String isLogin,
+      String userIid,
+      String kode,
+      String fullName,
+      String shortName,
+      String level,
+      String admin,
+      String active) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userName", userName);
     prefs.setString("isLogin", isLogin);
+    prefs.setString("userIid", userIid);
+    prefs.setString("kode", kode);
+    prefs.setString("fullName", fullName);
+    prefs.setString("shortName", shortName);
+    prefs.setString("isLogin", level);
+    prefs.setString("isLogin", admin);
+    prefs.setString("isLogin", active);
   }
 }
