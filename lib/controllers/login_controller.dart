@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,9 +50,10 @@ class LoginController extends GetxController {
         var level = data["value"]["Level"];
         var admin = data["value"]["Admin"];
         var active = data["value"]["Active"];
+        var readonly = data["value"]["Readonly"];
 
         addStringToSF(usernameC.text, "OK", userIid, kode, fullName, shortName,
-            level, admin, active);
+            level, admin, active, readonly);
 
         if (data["value"]["Active"] == 'N') {
           Get.defaultDialog(
@@ -84,7 +84,8 @@ class LoginController extends GetxController {
       String shortName,
       String level,
       String admin,
-      String active) async {
+      String active,
+      String readonly) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userName", userName);
     prefs.setString("isLogin", isLogin);
@@ -95,5 +96,6 @@ class LoginController extends GetxController {
     prefs.setString("level", level);
     prefs.setString("admin", admin);
     prefs.setString("active", active);
+    prefs.setString("readonly", readonly);
   }
 }

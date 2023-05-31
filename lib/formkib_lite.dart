@@ -1,13 +1,16 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
+import 'controllers/formkib_controller.dart';
 import 'functions/currencyFormat.dart';
 import 'home.dart';
 import 'models/barang.dart';
@@ -16,6 +19,7 @@ import 'models/unit.dart';
 
 class Formkiblite extends StatefulWidget {
   final String gCode;
+
   const Formkiblite(this.gCode, {Key key}) : super(key: key);
   //const Formkib(this.code);
   @override
@@ -23,6 +27,7 @@ class Formkiblite extends StatefulWidget {
 }
 
 class _FormkibliteState extends State<Formkiblite> {
+  final FormKibController formkibC = Get.put(FormKibController());
   List<Map<String, dynamic>> dataKib = [
     {"kib": "KIB A", "kode": "1.3.1"},
     {"kib": "KIB B", "kode": "1.3.2"},
@@ -49,6 +54,14 @@ class _FormkibliteState extends State<Formkiblite> {
   String kodeUpb = "";
   String level = "";
   String admin = "";
+  String readonly = "";
+  bool isTampilUnit = false;
+  bool isTampilSubUnit = false;
+  bool isTampilUpb = false;
+
+  bool isTampilStringUnit = false;
+  bool isTampilStringSubUnit = false;
+  bool isTampilStringUpb = false;
 
   String selectedRincianObjek = '';
   List<String> dataRincianObjek = [];
@@ -294,6 +307,10 @@ class _FormkibliteState extends State<Formkiblite> {
     kodeUpb = prefs.get('kodeUpb');
     level = prefs.get('level');
     admin = prefs.get('admin');
+    readonly = prefs.get('readonly');
+    formkibC.level = prefs.get('level');
+    formkibC.admin = prefs.get('admin');
+    formkibC.readonly = prefs.get('readonly');
   }
 
   @override
@@ -340,19 +357,24 @@ class _FormkibliteState extends State<Formkiblite> {
           ),
 
           //SUB UNIT
-          DropdownSearch<Unit>(
-            mode: Mode.MENU,
-            showSearchBox: true,
-            onChanged: (value) {
-              kdUpb = value?.kodeUnit;
-            },
-            dropdownBuilder: (context, selectedItem) =>
-                Text(selectedItem?.namaUnit ?? "Belum dipilih Sub Unit"),
-            popupItemBuilder: (context, item, isSelected) => ListTile(
-              title: Text(item.namaUnit),
-            ),
-            onFind: (text) async => await getUnit("ref_sub_unit", kdSubUnit),
-          ),
+          formkibC.isTampilSubUnit.isTrue == true
+              ? DropdownSearch<Unit>(
+                  mode: Mode.MENU,
+                  showSearchBox: true,
+                  onChanged: (value) {
+                    kdUpb = value?.kodeUnit;
+                  },
+                  dropdownBuilder: (context, selectedItem) =>
+                      Text(selectedItem?.namaUnit ?? "Belum dipilih Sub Unit"),
+                  popupItemBuilder: (context, item, isSelected) => ListTile(
+                    title: Text(item.namaUnit),
+                  ),
+                  onFind: (text) async =>
+                      await getUnit("ref_sub_unit", kdSubUnit),
+                )
+              : isTampilStringSubUnit == true
+                  ? const Text("Data Sub Unit")
+                  : const Text(""),
 
           SizedBox(
             height: 10,
