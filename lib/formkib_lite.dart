@@ -314,6 +314,7 @@ class _FormkibliteState extends State<Formkiblite> {
           //UNIT
           DropdownSearch<Unit>(
             mode: Mode.MENU,
+            // enabled: false,
             showSearchBox: true,
             onChanged: (value) {
               kdSubUnit = value?.kodeUnit;
@@ -337,7 +338,7 @@ class _FormkibliteState extends State<Formkiblite> {
           const SizedBox(
             height: 10,
           ),
-/*
+
           //SUB UNIT
           DropdownSearch<Unit>(
             mode: Mode.MENU,
@@ -375,7 +376,7 @@ class _FormkibliteState extends State<Formkiblite> {
           const SizedBox(
             height: 20,
           ),
-*/
+
           //PILIH KIB
           DropdownSearch<Map<String, dynamic>>(
             mode: Mode.MENU,
