@@ -51,9 +51,12 @@ class LoginController extends GetxController {
         var admin = data["value"]["Admin"];
         var active = data["value"]["Active"];
         var readonly = data["value"]["Readonly"];
+        var nmUnit = data["value"]["Nm_Unit"];
+        var nmSub = data["value"]["Nm_Sub"];
+        var nmUpb = data["value"]["Nm_UPB"];
 
         addStringToSF(usernameC.text, "OK", userIid, kode, fullName, shortName,
-            level, admin, active, readonly);
+            level, admin, active, readonly, nmUnit, nmSub, nmUpb);
 
         if (data["value"]["Active"] == 'N') {
           Get.defaultDialog(
@@ -85,7 +88,10 @@ class LoginController extends GetxController {
       String level,
       String admin,
       String active,
-      String readonly) async {
+      String readonly,
+      String nmUnit,
+      String nmSub,
+      String nmUpb) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userName", userName);
     prefs.setString("isLogin", isLogin);
@@ -97,5 +103,8 @@ class LoginController extends GetxController {
     prefs.setString("admin", admin);
     prefs.setString("active", active);
     prefs.setString("readonly", readonly);
+    prefs.setString("nmUnit", nmUnit);
+    prefs.setString("nmSub", nmSub);
+    prefs.setString("nmUpb", nmUpb);
   }
 }

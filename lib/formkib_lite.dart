@@ -66,6 +66,9 @@ class _FormkibliteState extends State<Formkiblite> {
   String selectedRincianObjek = '';
   List<String> dataRincianObjek = [];
 
+  var kdSubUnitA = '';
+  // kdSubUnitA = formkibC.kdSubUnit.toString();
+
   Future getRincianObjek(kode) async {
     var response = await http.get(
         Uri.parse(
@@ -302,22 +305,22 @@ class _FormkibliteState extends State<Formkiblite> {
     return userName;
   }
 
-  void getStringSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    kodeUpb = prefs.get('kodeUpb');
-    level = prefs.get('level');
-    admin = prefs.get('admin');
-    readonly = prefs.get('readonly');
-    formkibC.level = prefs.get('level');
-    formkibC.admin = prefs.get('admin');
-    formkibC.readonly = prefs.get('readonly');
-  }
+  // void getStringSF() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   kodeUpb = prefs.get('kodeUpb');
+  //   level = prefs.get('level');
+  //   admin = prefs.get('admin');
+  //   readonly = prefs.get('readonly');
+  //   formkibC.level = prefs.get('level');
+  //   formkibC.admin = prefs.get('admin');
+  //   formkibC.readonly = prefs.get('readonly');
+  // }
 
-  @override
-  void initState() {
-    getStringSF();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   getStringSF();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -329,71 +332,91 @@ class _FormkibliteState extends State<Formkiblite> {
         padding: const EdgeInsets.all(20),
         children: [
           //UNIT
-          DropdownSearch<Unit>(
-            mode: Mode.MENU,
-            // enabled: false,
-            showSearchBox: true,
-            onChanged: (value) {
-              kdSubUnit = value?.kodeUnit;
-              print('====UNIT======');
-              print(widget.gCode);
-              print(kdSubUnit);
-              print(kdKib);
-              print('==========');
-              print(kdUpb);
-              print(level);
-              print('==========');
-            },
-            dropdownBuilder: (context, selectedItem) =>
-                Text(selectedItem?.namaUnit ?? "Belum dipilih Unit"),
-            popupItemBuilder: (context, item, isSelected) => ListTile(
-              title: Text(item.namaUnit),
-            ),
-            onFind: (text) async => await getUnit("ref_unit", "0.0.0"),
-          ),
+          Obx(() {
+            return formkibC.isTampilUnit.isTrue
+                ? DropdownSearch<Unit>(
+                    mode: Mode.MENU,
+                    // enabled: false,
+                    showSearchBox: true,
+                    onChanged: (value) {
+                      kdSubUnit = value?.kodeUnit;
+                      print('====UNIT======');
+                      print(widget.gCode);
+                      print(kdSubUnit);
+                      print(kdKib);
+                      print('==========');
+                      print(kdUpb);
+                      print(level);
+                      print('==========');
+                    },
+                    dropdownBuilder: (context, selectedItem) =>
+                        Text(selectedItem?.namaUnit ?? "Belum dipilih Unit"),
+                    popupItemBuilder: (context, item, isSelected) => ListTile(
+                      title: Text(item.namaUnit),
+                    ),
+                    onFind: (text) async => await getUnit("ref_unit", "0.0.0"),
+                  )
+                : formkibC.isTampilStringUnit.isTrue
+                    ? Text(
+                        formkibC.nmUnit.toString(),
+                      )
+                    : const Text("Data  Unit");
+          }),
 
           const SizedBox(
             height: 10,
           ),
 
           //SUB UNIT
-          formkibC.isTampilSubUnit.isTrue == true
-              ? DropdownSearch<Unit>(
-                  mode: Mode.MENU,
-                  showSearchBox: true,
-                  onChanged: (value) {
-                    kdUpb = value?.kodeUnit;
-                  },
-                  dropdownBuilder: (context, selectedItem) =>
-                      Text(selectedItem?.namaUnit ?? "Belum dipilih Sub Unit"),
-                  popupItemBuilder: (context, item, isSelected) => ListTile(
-                    title: Text(item.namaUnit),
-                  ),
-                  onFind: (text) async =>
-                      await getUnit("ref_sub_unit", kdSubUnit),
-                )
-              : isTampilStringSubUnit == true
-                  ? const Text("Data Sub Unit")
-                  : const Text(""),
+          Obx(() {
+            return formkibC.isTampilSubUnit.isTrue
+                ? DropdownSearch<Unit>(
+                    mode: Mode.MENU,
+                    showSearchBox: true,
+                    onChanged: (value) {
+                      kdUpb = value?.kodeUnit;
+                    },
+                    dropdownBuilder: (context, selectedItem) => Text(
+                        selectedItem?.namaUnit ?? "Belum dipilih Sub Unit"),
+                    popupItemBuilder: (context, item, isSelected) => ListTile(
+                      title: Text(item.namaUnit),
+                    ),
+                    onFind: (text) async =>
+                        await getUnit("ref_sub_unit", kdSubUnit),
+                  )
+                : formkibC.isTampilStringSubUnit.isTrue
+                    ? Text(
+                        formkibC.nmSub.toString(),
+                      )
+                    : const Text("Data Sub Unit");
+          }),
 
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
           //UPB
-          DropdownSearch<Unit>(
-            mode: Mode.MENU,
-            showSearchBox: true,
-            onChanged: (value) {
-              kdUpb = value?.kodeUnit;
-            },
-            dropdownBuilder: (context, selectedItem) =>
-                Text(selectedItem?.namaUnit ?? "Belum dipilih UPB"),
-            popupItemBuilder: (context, item, isSelected) => ListTile(
-              title: Text(item.namaUnit),
-            ),
-            onFind: (text) async => await getUnit("ref_upb", kdUpb),
-          ),
+          Obx(() {
+            return formkibC.isTampilUpb.isTrue
+                ? DropdownSearch<Unit>(
+                    mode: Mode.MENU,
+                    showSearchBox: true,
+                    onChanged: (value) {
+                      kdUpb = value?.kodeUnit;
+                    },
+                    dropdownBuilder: (context, selectedItem) =>
+                        Text(selectedItem?.namaUnit ?? "Belum dipilih UPB"),
+                    popupItemBuilder: (context, item, isSelected) => ListTile(
+                      title: Text(item.namaUnit),
+                    ),
+                    onFind: (text) async => await getUnit("ref_upb", kdUpb),
+                  )
+                : formkibC.isTampilStringUpb.isTrue
+                    ? Text(
+                        formkibC.nmUpb.toString(),
+                      )
+                    : const Text("Data Upb");
+          }),
 
           const SizedBox(
             height: 20,
