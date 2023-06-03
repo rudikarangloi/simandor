@@ -78,6 +78,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  d_info:
+    dependency: "direct main"
+    description:
+      name: d_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
+  d_input:
+    dependency: "direct main"
+    description:
+      name: d_input
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
+  d_method:
+    dependency: "direct main"
+    description:
+      name: d_method
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
+  d_view:
+    dependency: "direct main"
+    description:
+      name: d_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   dropdown_search:
     dependency: "direct main"
     description:
@@ -232,7 +260,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.4"
+    version: "0.13.5"
   http_parser:
     dependency: transitive
     description:

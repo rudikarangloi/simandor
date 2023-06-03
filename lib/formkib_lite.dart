@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:d_info/d_info.dart';
+import 'package:d_input/d_input.dart';
+import 'package:d_method/d_method.dart';
+import 'package:d_view/d_view.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -66,7 +69,11 @@ class _FormkibliteState extends State<Formkiblite> {
   String selectedRincianObjek = '';
   List<String> dataRincianObjek = [];
 
-  var kdSubUnitA = '';
+  String parKdUnit = '';
+  String parKdSubUnit = '';
+  String parKdUpb = '';
+  String sType = '';
+
   // kdSubUnitA = formkibC.kdSubUnit.toString();
 
   Future getRincianObjek(kode) async {
@@ -101,6 +108,35 @@ class _FormkibliteState extends State<Formkiblite> {
   }
 
   Future getUnit(tableName, kode) async {
+    kodeUpb = formkibC.kodeUpb.value;
+    level = formkibC.level.value;
+    admin = formkibC.admin.value;
+    print('tableName : ' + tableName);
+    print('kode : ' + kode);
+    print('kodeUpb : ' + kodeUpb);
+    print('level : ' + level);
+    print('admin : ' + admin);
+    var response = await http.get(Uri.parse(
+        "$BASE_URL/getUnit.php?tableName=$tableName&kode=$kode&kodeUpb=$kodeUpb&level=$level&admin=$admin"));
+    if (response.statusCode != 200) {
+      return [];
+    }
+    List allUnit =
+        (json.decode(response.body) as Map<String, dynamic>)["value"];
+    List<Unit> allModelUnit = [];
+    allUnit.forEach((element) {
+      allModelUnit.add(
+          Unit(kodeUnit: element["kode_unit"], namaUnit: element["nama_unit"]));
+    });
+    return allModelUnit;
+  }
+
+  Future getUpbs(tableName, kode, kodeUpb, level, admin) async {
+    print('tableName : ' + tableName);
+    print('kode : ' + kode);
+    print('kodeUpb : ' + kodeUpb);
+    print('level : ' + level);
+    print('admin : ' + admin);
     var response = await http.get(Uri.parse(
         "$BASE_URL/getUnit.php?tableName=$tableName&kode=$kode&kodeUpb=$kodeUpb&level=$level&admin=$admin"));
     if (response.statusCode != 200) {
@@ -244,20 +280,89 @@ class _FormkibliteState extends State<Formkiblite> {
     return allModelBarang;
   }
 
+  Future getBarang3(kdUnit, kdSubUnit, kdUpb, sType, kdKib) async {
+    DMethod.printTitle('UNIT : ', kdUnit);
+    DMethod.printTitle('SUB UNIT ', kdSubUnit);
+    DMethod.printTitle('UPB ', kdUpb);
+    DMethod.printTitle('sType ', sType);
+    DMethod.printTitle('KODE KIB ', kdKib);
+    var response = await http.get(Uri.parse(
+        "$BASE_URL/getBarang3.php?kdUnit=$kdUnit&kdSubUnit=$kdSubUnit&kdUpb=$kdUpb&sType=$sType&kdKib=$kdKib"));
+    if (response.statusCode != 200) {
+      return [];
+    }
+    List allBarang =
+        (json.decode(response.body) as Map<String, dynamic>)["value"];
+    List<Barang> allModelBarang = [];
+    allBarang.forEach((element) {
+      allModelBarang.add(Barang(
+          idt: element["IDT"],
+          referensi: element["Referensi"],
+          refGroup: element["Ref_Group"],
+          refMutasi: element["Ref_Mutasi"],
+          refUsulan: element["Ref_Usulan"],
+          refHistory: element["Ref_History"],
+          refUsulanHis: element["Ref_Usulan_His"],
+          kdUpb: element["Kd_UPB"],
+          kdAset: element["Kd_Aset"],
+          kdAset108: element["Kd_Aset_108"],
+          kdRuang: element["Kd_Ruang"],
+          noRegister: element["No_Register"],
+          noPengadaan: element["No_Pengadaan"],
+          refTemp: element["Ref_Temp"],
+          nmAset: element["Nm_Aset"],
+          kdPemilik: element["Kd_Pemilik"],
+          tglPerolehan: element["Tgl_Perolehan"],
+          tglMutasi: element["Tgl_Mutasi"],
+          tglMulai: element["Tgl_Mulai"],
+          tahun: element["Tahun"],
+          luasM2: element["Luas_M2"],
+          alamat: element["Alamat"],
+          hakTanah: element["Hak_Tanah"],
+          sertifikat: element["Sertifikat"],
+          sertifikatTanggal: element["Sertifikat_Tanggal"],
+          sertifikatNomor: element["Sertifikat_Nomor"],
+          penggunaan: element["Penggunaan"],
+          asalUsul: element["Asal_Usul"],
+          harga: element["Harga"],
+          noSp2D: element["No_SP2D"],
+          merk: element["Merk"],
+          type: element["Type"],
+          ukuranCc: element["Ukuran_CC"],
+          bahan: element["Bahan"],
+          nomorPabrik: element["Nomor_Pabrik"],
+          nomorRangka: element["Nomor_Rangka"],
+          nomorMesin: element["Nomor_Mesin"],
+          nomorPolisi: element["Nomor_Polisi"],
+          nomorPolisiLama: element["Nomor_Polisi_Lama"],
+          nomorBpkb: element["Nomor_BPKB"],
+          pemegang: element["Pemegang"],
+          pemegangLama: element["Pemegang_Lama"],
+          kondisi: element["Kondisi"],
+          masaManfaat: element["Masa_Manfaat"],
+          nilaiAkhir: element["Nilai_Akhir"],
+          bertingkat: element["Bertingkat"],
+          beton: element["Beton"],
+          luasLantai: element["Luas_Lantai"],
+          lokasi: element["Lokasi"]));
+    });
+    return allModelBarang;
+  }
+
   Future simpan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userName = prefs.get('userName');
 
-    // print('======SIMPAN======');
-    // print(idt +
-    //     ' : ' +
-    //     kdUpb +
-    //     ' : ' +
-    //     kdAset +
-    //     ' : ' +
-    //     kode_bar +
-    //     ' : ' +
-    //     userName);
+    print('======SIMPAN======');
+    print(idt +
+        ' : ' +
+        kdUpb +
+        ' : ' +
+        kdAset +
+        ' : ' +
+        kode_bar +
+        ' : ' +
+        userName);
 
     var response = await post(Uri.parse("$BASE_URL/update_tabel_kib.php"),
         headers: {
@@ -275,25 +380,20 @@ class _FormkibliteState extends State<Formkiblite> {
 
     var data = json.decode(response.body);
     if (data.toString() == "Success") {
-      Fluttertoast.showToast(
-        msg: 'Sukses update data',
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_SHORT,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => insertTableFromQr(),
-        ),
-      );
+      DInfo.dialogSuccess(context, "Sukses update data");
+      DInfo.closeDialog(context);
+      // Get.defaultDialog(
+      //     title: "Pemberitahuan", middleText: "Sukses update data");
+      Get.off(() => insertTableFromQr());
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => insertTableFromQr(),
+      //   ),
+      // );
     } else {
-      Fluttertoast.showToast(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        msg: data.toString(),
-        toastLength: Toast.LENGTH_SHORT,
-      );
+      DInfo.dialogError(context, data.toString());
+      DInfo.closeDialog(context);
     }
   }
 
@@ -304,23 +404,6 @@ class _FormkibliteState extends State<Formkiblite> {
     print("userName : " + userName);
     return userName;
   }
-
-  // void getStringSF() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   kodeUpb = prefs.get('kodeUpb');
-  //   level = prefs.get('level');
-  //   admin = prefs.get('admin');
-  //   readonly = prefs.get('readonly');
-  //   formkibC.level = prefs.get('level');
-  //   formkibC.admin = prefs.get('admin');
-  //   formkibC.readonly = prefs.get('readonly');
-  // }
-
-  // @override
-  // void initState() {
-  //   getStringSF();
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -340,26 +423,27 @@ class _FormkibliteState extends State<Formkiblite> {
                     showSearchBox: true,
                     onChanged: (value) {
                       kdSubUnit = value?.kodeUnit;
-                      print('====UNIT======');
+                      parKdUnit = value?.kodeUnit;
+                      parKdSubUnit = '';
+                      parKdUpb = '';
+                      sType = '1';
+
+                      print('====PARAMETER for BARANG - UNIT======');
                       print(widget.gCode);
-                      print(kdSubUnit);
-                      print(kdKib);
-                      print('==========');
-                      print(kdUpb);
-                      print(level);
-                      print('==========');
+                      print('UNIT : ' + parKdUnit);
+                      print('SUB UNIT : ' + parKdSubUnit);
+                      print('UPB : ' + parKdUpb);
+                      print('sType : ' + sType);
                     },
                     dropdownBuilder: (context, selectedItem) =>
-                        Text(selectedItem?.namaUnit ?? "Belum dipilih Unit"),
+                        Text(selectedItem?.namaUnit ?? "Pilih Unit"),
                     popupItemBuilder: (context, item, isSelected) => ListTile(
                       title: Text(item.namaUnit),
                     ),
                     onFind: (text) async => await getUnit("ref_unit", "0.0.0"),
                   )
                 : formkibC.isTampilStringUnit.isTrue
-                    ? Text(
-                        formkibC.nmUnit.toString(),
-                      )
+                    ? input(Icons.account_box, formkibC.nmUnit.toString())
                     : const Text("Data  Unit");
           }),
 
@@ -375,19 +459,29 @@ class _FormkibliteState extends State<Formkiblite> {
                     showSearchBox: true,
                     onChanged: (value) {
                       kdUpb = value?.kodeUnit;
+
+                      parKdUnit = kdSubUnit ?? formkibC.kdUnit;
+                      parKdSubUnit = value?.kodeUnit;
+                      parKdUpb = '';
+                      sType = '2';
+
+                      print('====PARAMETER for BARANG - SUB UNIT======');
+                      print(widget.gCode);
+                      print('UNIT : ' + parKdUnit);
+                      print('SUB UNIT : ' + parKdSubUnit);
+                      print('UPB : ' + parKdUpb);
+                      print('sType : ' + sType);
                     },
-                    dropdownBuilder: (context, selectedItem) => Text(
-                        selectedItem?.namaUnit ?? "Belum dipilih Sub Unit"),
+                    dropdownBuilder: (context, selectedItem) =>
+                        Text(selectedItem?.namaUnit ?? "Pilih Sub Unit : "),
                     popupItemBuilder: (context, item, isSelected) => ListTile(
                       title: Text(item.namaUnit),
                     ),
-                    onFind: (text) async =>
-                        await getUnit("ref_sub_unit", kdSubUnit),
+                    onFind: (text) async => await getUnit(
+                        "ref_sub_unit", kdSubUnit ?? formkibC.kdUnit),
                   )
                 : formkibC.isTampilStringSubUnit.isTrue
-                    ? Text(
-                        formkibC.nmSub.toString(),
-                      )
+                    ? input(Icons.event_available, formkibC.nmSub.toString())
                     : const Text("Data Sub Unit");
           }),
 
@@ -402,14 +496,27 @@ class _FormkibliteState extends State<Formkiblite> {
                     mode: Mode.MENU,
                     showSearchBox: true,
                     onChanged: (value) {
-                      kdUpb = value?.kodeUnit;
+                      // kdUpb = value?.kodeUnit;
+
+                      parKdUnit = kdSubUnit ?? formkibC.kdUnit;
+                      parKdSubUnit = kdUpb ?? formkibC.kdSubUnit;
+                      parKdUpb = value?.kodeUnit;
+                      sType = '3';
+
+                      DMethod.printTitle(
+                          'HEADER ', '====PARAMETER for BARANG - UPB======');
+                      DMethod.printTitle('widget.gCode ', widget.gCode);
+                      DMethod.printTitle('UNIT : ', parKdUnit);
+                      DMethod.printTitle('SUB UNIT ', parKdUpb);
+                      DMethod.printTitle('sType ', sType);
                     },
                     dropdownBuilder: (context, selectedItem) =>
-                        Text(selectedItem?.namaUnit ?? "Belum dipilih UPB"),
+                        Text(selectedItem?.namaUnit ?? "Pilih UPB"),
                     popupItemBuilder: (context, item, isSelected) => ListTile(
                       title: Text(item.namaUnit),
                     ),
-                    onFind: (text) async => await getUnit("ref_upb", kdUpb),
+                    onFind: (text) async =>
+                        await getUnit("ref_upb", kdUpb ?? formkibC.kdSubUnit),
                   )
                 : formkibC.isTampilStringUpb.isTrue
                     ? Text(
@@ -609,7 +716,9 @@ class _FormkibliteState extends State<Formkiblite> {
             kdKib = 1.3.2
             */
 
-            onFind: (text) async => await getBarang2(kdSubUnit, kdKib),
+            // onFind: (text) async => await getBarang2(kdSubUnit, kdKib),
+            onFind: (text) async => await getBarang3(
+                parKdUnit, parKdSubUnit, parKdUpb, sType, kdKib),
           ),
 
           const SizedBox(
@@ -647,6 +756,27 @@ class _FormkibliteState extends State<Formkiblite> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget input(
+    // TextEditingController controller,
+    IconData icon,
+    String hint, [
+    bool obsecure = false,
+  ]) {
+    return TextField(
+      decoration: InputDecoration(
+        fillColor: Colors.black12,
+        filled: true,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        prefixIcon: Icon(icon, color: Colors.black12),
+        hintText: hint,
+      ),
+      obscureText: obsecure,
     );
   }
 }

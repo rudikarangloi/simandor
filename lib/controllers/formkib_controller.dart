@@ -24,14 +24,17 @@ class FormKibController extends GetxController {
 
   void getStringSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // level.value = prefs.get('level');
-    level.value = '3';
+    level.value = prefs.get('level');
     admin.value = prefs.get('admin');
     readonly.value = prefs.get('readonly');
     kodeUpb.value = prefs.get('kodeUpb');
     nmUnit.value = prefs.get('nmUnit');
     nmSub.value = prefs.get('nmSub');
-    nmUpb.value = prefs.get('kodeUpb');
+    nmUpb.value = prefs.get('nmUpb');
+
+    //level.value = '1';
+    //admin.value = '1';
+    //kodeUpb.value = '24.04.04.01.01.006';
 
     // kodeUpb 	= 24.04.04.01.01.001
     // kd_unit 	= 24.04.01.01			    / 11 huruf
@@ -68,6 +71,7 @@ class FormKibController extends GetxController {
     print("nmUnit :" + nmUnit.value);
     print("nmSub :" + nmSub.value);
     print("nmUpb :" + nmUpb.value);
+    print("Admin :" + admin.value);
     print("Level :" + level.value);
     print("tampil Unit :" + isTampilUnit.value.toString());
     print("tampil Sub Unit :" + isTampilSubUnit.value.toString());
