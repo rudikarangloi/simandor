@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:d_info/d_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
@@ -59,22 +60,28 @@ class LoginController extends GetxController {
             level, admin, active, readonly, nmUnit, nmSub, nmUpb);
 
         if (data["value"]["Active"] == 'N') {
-          Get.defaultDialog(
-              title: "Pemberitahuan", middleText: "Username tidak aktif");
+          // Get.defaultDialog(
+          //     title: "Pemberitahuan", middleText: "Username tidak aktif");
+          DInfo.dialogError(Get.context, "Username tidak aktif");
+          DInfo.closeDialog(Get.context);
         } else {
           Get.offAll(insertTableFromQr());
         }
       } else {
-        Get.defaultDialog(
-            title: "Terjadi kesalahan",
-            middleText: "Username and password invalid");
+        // Get.defaultDialog(
+        //     title: "Terjadi kesalahan",
+        //     middleText: "Username and password invalid");
+        DInfo.dialogError(Get.context, "Username and password belum benar");
+        DInfo.closeDialog(Get.context);
       }
       //------------
 
     } catch (e) {
-      Get.defaultDialog(
-          title: "Terjadi kesalahan",
-          middleText: "Tidak dapat terkoneksi dengan server");
+      // Get.defaultDialog(
+      //     title: "Terjadi kesalahan",
+      //     middleText: "Tidak dapat terkoneksi dengan server");
+      DInfo.dialogError(Get.context, "Tidak dapat terkoneksi dengan server");
+      DInfo.closeDialog(Get.context);
     }
   }
 
