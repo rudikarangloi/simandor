@@ -62,12 +62,23 @@ class LoginController extends GetxController {
             level, admin, active, readonly, nmUnit, nmSub, nmUpb);
 
         if (data["value"]["Active"] == 'N') {
+<<<<<<< HEAD
+=======
+          // Get.defaultDialog(
+          //     title: "Pemberitahuan", middleText: "Username tidak aktif");
+>>>>>>> c40df348a0648ea6dfe3f989162e08a2f7e08f48
           DInfo.dialogError(Get.context, "Username tidak aktif");
           DInfo.closeDialog(Get.context);
         } else {
           Get.offAll(insertTableFromQr());
         }
       } else {
+<<<<<<< HEAD
+=======
+        // Get.defaultDialog(
+        //     title: "Terjadi kesalahan",
+        //     middleText: "Username and password invalid");
+>>>>>>> c40df348a0648ea6dfe3f989162e08a2f7e08f48
         DInfo.dialogError(Get.context, "Username and password belum benar");
         DInfo.closeDialog(Get.context);
       }
@@ -76,6 +87,11 @@ class LoginController extends GetxController {
       // Get.defaultDialog(
       //     title: "Terjadi kesalahan",
       //     middleText: "Tidak dapat terkoneksi dengan server");
+<<<<<<< HEAD
+=======
+      DInfo.dialogError(Get.context, "Tidak dapat terkoneksi dengan server");
+      DInfo.closeDialog(Get.context);
+>>>>>>> c40df348a0648ea6dfe3f989162e08a2f7e08f48
     }
   }
 

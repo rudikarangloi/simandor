@@ -50,6 +50,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+<<<<<<< HEAD
         debugShowCheckedModeBanner: false,
         title: 'SIMANDOR',
         theme: ThemeData(
@@ -67,6 +68,25 @@ class _MyAppState extends State<MyApp> {
         // )
         //home: DataTableDemo()
         );
+=======
+      debugShowCheckedModeBanner: false,
+      title: 'SIMANDOR',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      //home: insertTableFromQr(),
+      //home: FormLogin(),
+      //home: const Formkib("02"),
+      //home: const Formkiblite("02")
+      home: login == true ? insertTableFromQr() : const FormLogin(),
+      //home: const Detail('KIB-B-0000000004')
+      // home: DetailPage(
+      //   index: 1,
+      // )
+      //home: DataTableDemo()
+    );
+>>>>>>> c40df348a0648ea6dfe3f989162e08a2f7e08f48
   }
 }
 
